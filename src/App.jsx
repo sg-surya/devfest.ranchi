@@ -799,7 +799,11 @@ export default function App() {
           </div>
           <div className="border-t border-white/10 mt-8 pt-6 flex flex-col md:flex-row justify-between gap-3 text-xs text-white/50">
             <span>© Google Developer Groups Ranchi 2026</span>
-            <span>Made with ❤️ by GDG Ranchi Tech Team</span>
+            <div className="flex items-center gap-3">
+              <span>Made with ❤️ by GDG Ranchi Tech Team</span>
+              <span className="hidden sm:inline">•</span>
+              <a href="https://vasudevai.in" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-gdgYellow transition underline decoration-white/30 underline-offset-4">Build by Vasudev AI →</a>
+            </div>
           </div>
         </div>
       </footer>
