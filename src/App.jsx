@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Calendar, MapPin, Users, Mic2, Clock, Award, Ticket, ChevronDown, ArrowRight, Sparkles, Mountain, Building2, Mail, Globe, Link2, Share2 } from 'lucide-react'
 
@@ -49,11 +49,17 @@ export default function App() {
   const [openFaq, setOpenFaq] = useState(0)
   const [badgeOpen, setBadgeOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const carouselRef = useRef(null)
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 2400)
     return () => clearTimeout(t)
   }, [])
+
+  const scrollCarousel = (dir) => {
+    if (!carouselRef.current) return
+    carouselRef.current.scrollBy({ left: dir === 'left' ? -360 : 360, behavior: 'smooth' })
+  }
 
   return (
     <div className="min-h-screen">
@@ -207,7 +213,7 @@ export default function App() {
 
         <div className="relative max-w-[1280px] mx-auto px-4 md:px-6 w-full flex-1 flex flex-col justify-center">
           {/* CENTERED EDITORIAL TEXT */}
-          <div className="text-center py-10 md:py-8 max-w-[900px] mx-auto relative w-full">
+          <div className="text-center pt-10 md:pt-8 pb-[210px] md:pb-[290px] max-w-[900px] mx-auto relative w-full">
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="inline-flex items-center gap-2.5 bg-white border-[2px] border-black rounded-full px-4 py-2 text-xs font-bold shadow-[3px_3px_0_0_#000]">
               <span className="w-2 h-2 bg-gdgGreen rounded-full animate-pulse" /> GDG Ranchi presents • 1st Edition in Ranchi
               <span className="hidden sm:inline-flex items-center gap-1.5 ml-2 pl-3 border-l-2 border-black/10"><Sparkles size={12} className="text-gdgYellow" /> Jharkhand — City of Waterfalls</span>
@@ -264,8 +270,11 @@ export default function App() {
               <span className="w-1.5 h-1.5 bg-gdgGreen rounded-full" /> 800+ participants • 10+ speakers • 2 workshops
             </motion.div>
           </div>
+        </div>
 
-
+        {/* hero.png - height thodi kam, width same, neatly inside */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none select-none flex justify-center px-2 md:px-4">
+          <img src="/hero.png" alt="Ranchi Skyline - Jagannath Mandir, Hundru Falls, JSCA, Hills" className="w-full h-auto max-h-[190px] md:max-h-[260px] lg:max-h-[300px] object-contain object-bottom" />
         </div>
       </section>
 
@@ -295,99 +304,263 @@ export default function App() {
         </div>
       </section>
 
-      {/* About */}
-      <section id="about" className="max-w-[1280px] mx-auto px-4 md:px-6 py-10">
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          <div>
-            <div className="text-xs font-black tracking-[0.18em] text-gdgRed">WHAT IS</div>
-            <h2 className="display font-black text-[42px] md:text-[56px] leading-none tracking-tighter">DevFest?</h2>
-            <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-black/70">
-              <p>DevFest is an annual, globally recognized, decentralized tech conference hosted by Google Developer Groups (GDG) across the world. Thousands of developers, learners, and tech enthusiasts come together to explore cutting-edge technologies.</p>
-              <p><strong className="text-black">DevFest Ranchi 2026</strong> marks the inaugural edition in the capital of Jharkhand — built for meaningful learning, collaboration, and strengthening the developer community in the region. Organized by GDG Ranchi, this DevFest brings a full day of expert sessions, workshops, lightning talks, demos, and networking.</p>
-              <p>Celebrating Ranchi's spirit — the <strong>City of Waterfalls</strong> — with a local flavor of Sohrai art, tribal culture, and the youthful energy of Jharkhand. Learn, build, and connect with the community.</p>
-            </div>
-          </div>
-          <div className="bg-white border-2 border-black rounded-[24px] p-6 shadow-[6px_6px_0_0_#000]">
-            <h3 className="font-black text-[20px]">What to Expect</h3>
-            <div className="grid sm:grid-cols-2 gap-4 mt-5">
-              {[
-                { t: "Technical Content", d: "In-depth insights from experts on AI, Cloud, Web, Android & Flutter.", icon: Mic2, color: "bg-gdgBlue" },
-                { t: "Networking", d: "Meet 800+ developers, founders, and hiring managers.", icon: Users, color: "bg-gdgGreen" },
-                { t: "Fun Activities", d: "Quizzes, swag, photo booths & community challenges.", icon: Sparkles, color: "bg-gdgYellow" },
-                { t: "Knowledge Sharing", d: "Lightning talks, demos, and hands-on workshops.", icon: Award, color: "bg-gdgRed" },
-              ].map(c => (
-                <div key={c.t} className="border-2 border-black rounded-2xl p-4 bg-[#FFFBF0]">
-                  <div className={`w-10 h-10 rounded-xl ${c.color} border-2 border-black flex items-center justify-center`}><c.icon size={18} /></div>
-                  <div className="font-black mt-3 text-sm">{c.t}</div>
-                  <div className="text-xs text-black/60 mt-1 leading-relaxed">{c.d}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* About - Premium Editorial Split */}
+      <section id="about" className="relative overflow-hidden bg-white border-y-[3px] border-black">
+        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: `linear-gradient(to right, #0D2818 1px, transparent 1px), linear-gradient(to bottom, #0D2818 1px, transparent 1px)`, backgroundSize: '36px 36px' }} />
+        <div className="absolute top-0 left-0 w-full h-[7px] flex">
+          <div className="flex-1 bg-gdgBlue" /><div className="flex-1 bg-gdgRed" /><div className="flex-1 bg-gdgYellow" /><div className="flex-1 bg-gdgGreen" />
         </div>
-      </section>
 
-      {/* Speakers */}
-      <section id="speakers" className="bg-white border-y-2 border-black">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-10">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="relative max-w-[1280px] mx-auto px-4 md:px-6 py-12 md:py-16">
+          <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 items-start">
+            {/* Left - Editorial */}
             <div>
-              <div className="text-xs font-black tracking-widest text-gdgBlue">LEARN FROM THE BEST</div>
-              <h2 className="display font-black text-[36px] md:text-[48px] tracking-tighter">Our Speakers</h2>
-              <p className="text-sm text-black/60 max-w-[560px]">Hear from industry experts, innovators, and community leaders sharing insights that can elevate your skills and perspective.</p>
-            </div>
-            <div className="hidden md:flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-gdgBlue" /><span className="w-3 h-3 rounded-full bg-gdgRed" /><span className="w-3 h-3 rounded-full bg-gdgYellow" /><span className="w-3 h-3 rounded-full bg-gdgGreen" />
-            </div>
-          </div>
+              <motion.div initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="inline-flex items-center gap-2 bg-[#FFFBF0] border-2 border-black rounded-full px-3 py-1 text-xs font-extrabold shadow-[2px_2px_0_0_#000]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <span className="w-2 h-2 bg-gdgBlue rounded-full animate-pulse" /> ABOUT • COMMUNITY • 2026
+              </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-8">
-            {speakers.map(s => (
-              <div key={s.name} className="border-2 border-black rounded-[20px] overflow-hidden bg-[#FFFBF0] shadow-[4px_4px_0_0_#000] group hover:translate-y-[-2px] transition">
-                <div className={`h-[160px] ${s.color} relative flex items-end justify-center`}>
-                  <div className="w-24 h-24 rounded-full bg-white border-2 border-black mb-4 flex items-center justify-center text-2xl font-black">{s.name.split(' ').map(n => n[0]).join('')}</div>
-                  <div className="absolute top-3 right-3 bg-white border border-black rounded-full px-2 py-1 text-[10px] font-bold">{s.company}</div>
-                </div>
-                <div className="p-4 text-center">
-                  <div className="font-black text-[15px]">{s.name}</div>
-                  <div className="text-xs text-black/60">{s.role}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="text-center text-xs text-black/50 mt-6">* Final speaker lineup TBA — stay tuned on @GDGRanchi</p>
-        </div>
-      </section>
-
-      {/* Agenda */}
-      <section id="agenda" className="max-w-[1280px] mx-auto px-4 md:px-6 py-10">
-        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8">
-          <div className="bg-ranchiGreen text-white rounded-[24px] p-7 border-2 border-black shadow-[6px_6px_0_0_#000]">
-            <div className="text-gdgYellow text-xs font-black tracking-widest">FULL DAY • ONE STAGE • MANY TRACKS</div>
-            <h2 className="display font-black text-[34px] leading-none mt-2">Agenda</h2>
-            <p className="text-sm text-white/70 mt-3">A power-packed day of learning, building, and networking. Timings are tentative and will be finalized with venue announcement.</p>
-            <div className="mt-6 inline-flex items-center gap-2 bg-white text-black rounded-full px-4 py-2 text-xs font-bold"><Clock size={14} /> 09:00 AM — 05:30 PM • Full Day Event</div>
-            <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-              {[{ k: "10+", l: "Sessions" }, { k: "2+", l: "Workshops" }, { k: "800+", l: "Attendees" }].map(st => (
-                <div key={st.l} className="bg-white/10 rounded-2xl py-3 border border-white/15">
-                  <div className="font-black text-xl">{st.k}</div><div className="text-xs text-white/70">{st.l}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="space-y-3">
-            {agenda.map((a, i) => (
-              <div key={i} className="flex gap-4 bg-white border-2 border-black rounded-2xl p-4 shadow-[3px_3px_0_0_#000]">
-                <div className="shrink-0 w-[92px] text-center">
-                  <div className="bg-black text-white rounded-full px-2 py-1 text-xs font-bold">{a.time}</div>
-                  <div className="w-px h-full bg-black/10 mx-auto mt-2 hidden md:block" />
+              <div className="mt-5 flex gap-4">
+                <div className="hidden sm:flex flex-col items-center">
+                  <span className="text-[11px] font-extrabold tracking-[0.2em] text-black/30" style={{ writingMode: 'vertical-rl' }}>WHAT IS</span>
+                  <div className="w-[2px] flex-1 bg-black/10 mt-2 rounded-full" />
                 </div>
                 <div>
-                  <div className="font-black text-[15px]">{a.title}</div>
-                  <div className="text-sm text-black/60">{a.desc}</div>
+                  <h2 className="text-[42px] md:text-[56px] font-extrabold leading-[0.9] tracking-[-0.04em]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800 }}>
+                    <span className="block text-black/30 text-[14px] tracking-[0.28em] font-extrabold mb-1">WHAT IS</span>
+                    DevFest<span className="inline-block bg-gdgYellow border-[2.5px] border-black rounded-full px-3 py-0.5 text-[30px] md:text-[40px] ml-2 -rotate-1 shadow-[4px_4px_0_0_#000]">?</span>
+                  </h2>
+
+                  <div className="mt-6 space-y-4 text-[14px] md:text-[15px] leading-relaxed text-black/70 font-medium" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                    <p className="border-l-[3px] border-gdgBlue pl-4">
+                      DevFest is an annual, globally recognized, decentralized tech conference hosted by <span className="font-extrabold text-black">Google Developer Groups</span> across the world. Thousands of developers, learners, and tech enthusiasts come together to explore cutting-edge technologies.
+                    </p>
+                    <p>
+                      <span className="font-extrabold text-black bg-[#FFFBF0] border border-black px-1.5 py-0.5 rounded">DevFest Ranchi 2026</span> marks the inaugural edition in the capital of Jharkhand — built for meaningful learning, collaboration, and strengthening the developer community in the region. Organized by <span className="font-bold text-black">GDG Ranchi</span>, this DevFest brings a full day of expert sessions, workshops, lightning talks, demos, and networking.
+                    </p>
+                    <p className="bg-ranchiGreen text-white rounded-xl px-4 py-3 border-2 border-black shadow-[3px_3px_0_0_#000] text-sm">
+                      Celebrating Ranchi's spirit — the <span className="font-extrabold text-gdgYellow">City of Waterfalls</span> — with a local flavor of Sohrai art, tribal culture, and the youthful energy of Jharkhand. Learn, build, and connect.
+                    </p>
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {[
+                      { k: "14th", l: "Global Edition" },
+                      { k: "1st", l: "Ranchi Edition" },
+                      { k: "800+", l: "Developers" },
+                    ].map(s => (
+                      <div key={s.k} className="bg-white border-2 border-black rounded-full px-4 py-2 flex items-center gap-2 shadow-[2px_2px_0_0_#000]">
+                        <span className="font-extrabold text-[16px]">{s.k}</span><span className="text-xs font-bold text-black/60">{s.l}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* Right - What to Expect - Bento cool */}
+            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15 }} className="bg-[#FFFBF0] border-[2.5px] border-black rounded-[24px] p-5 md:p-6 shadow-[6px_6px_0_0_#000] relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-gdgYellow/20 rounded-full blur-[30px]" />
+              <div className="flex items-center justify-between">
+                <h3 className="text-[18px] md:text-[20px] font-extrabold tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>What to Expect</h3>
+                <span className="hidden sm:inline-flex text-[11px] font-extrabold tracking-widest bg-black text-white rounded-full px-3 py-1">4 EXPERIENCES</span>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-3.5 mt-5">
+                {[
+                  { t: "Technical Content", d: "In-depth insights from experts on AI, Cloud, Web, Android & Flutter.", icon: Mic2, color: "bg-gdgBlue", rot: "-rotate-1" },
+                  { t: "Networking", d: "Meet 800+ developers, founders, and hiring managers.", icon: Users, color: "bg-gdgGreen", rot: "rotate-1" },
+                  { t: "Fun Activities", d: "Quizzes, swag, photo booths & community challenges.", icon: Sparkles, color: "bg-gdgYellow", rot: "rotate-1" },
+                  { t: "Knowledge Sharing", d: "Lightning talks, demos, and hands-on workshops.", icon: Award, color: "bg-gdgRed", rot: "-rotate-1" },
+                ].map((c, i) => (
+                  <motion.div key={c.t} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.08 * i }} whileHover={{ y: -3, rotate: i % 2 === 0 ? -0.7 : 0.7 }} className={`bg-white border-2 border-black rounded-2xl p-4 shadow-[3px_3px_0_0_#000] hover:shadow-[5px_5px_0_0_#000] transition-all ${c.rot}`}>
+                    <div className={`w-10 h-10 rounded-xl ${c.color} border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000]`}><c.icon size={18} strokeWidth={2.5} /></div>
+                    <div className="font-extrabold mt-3 text-[14px] tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{c.t}</div>
+                    <div className="text-xs font-semibold text-black/60 mt-1 leading-relaxed">{c.d}</div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="mt-4 bg-black text-white rounded-full px-4 py-2.5 flex items-center justify-between text-xs font-bold">
+                <span>Full day • One stage • Many tracks</span><span className="hidden sm:inline bg-white text-black rounded-full px-2 py-1 text-[11px] font-extrabold">09 AM — 05 PM</span>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Speakers - Premium Editorial */}
+      <section id="speakers" className="bg-[#FFFBF0] border-y-[3px] border-black relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(to right, #0D2818 1px, transparent 1px), linear-gradient(to bottom, #0D2818 1px, transparent 1px)`, backgroundSize: '32px 32px' }} />
+        <div className="absolute -top-20 right-0 w-[420px] h-[420px] bg-gdgBlue/8 rounded-full blur-[60px]" />
+        <div className="absolute -bottom-20 left-0 w-[420px] h-[420px] bg-gdgYellow/10 rounded-full blur-[60px]" />
+
+        <div className="relative max-w-[1280px] mx-auto px-4 md:px-6 py-12 md:py-14">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white border-2 border-black rounded-full px-3 py-1 text-xs font-extrabold shadow-[2px_2px_0_0_#000]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <span className="w-2 h-2 bg-gdgRed rounded-full animate-pulse" /> LEARN FROM THE BEST • 2026 LINEUP
+              </div>
+              <h2 className="mt-3 text-[38px] md:text-[52px] font-extrabold tracking-[-0.04em] leading-none" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800 }}>
+                Our <span className="bg-gdgYellow border-[2.5px] border-black rounded-full px-4 py-1 text-[32px] md:text-[42px] shadow-[4px_4px_0_0_#000] inline-block -rotate-1">Speakers</span>
+              </h2>
+              <p className="mt-3 text-sm md:text-[15px] text-black/60 max-w-[580px] font-semibold leading-relaxed" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                Industry experts, GDEs & community leaders — sharing real-world insights on <span className="font-extrabold text-black">AI, Android, Web & Cloud</span> to level up your craft.
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-1.5 bg-white border-2 border-black rounded-full px-3 py-2 shadow-[2px_2px_0_0_#000]">
+                <span className="w-2.5 h-2.5 rounded-full bg-gdgBlue" /><span className="w-2.5 h-2.5 rounded-full bg-gdgRed" /><span className="w-2.5 h-2.5 rounded-full bg-gdgYellow" /><span className="w-2.5 h-2.5 rounded-full bg-gdgGreen" />
+              </div>
+              <div className="bg-black text-white rounded-full px-4 py-2 text-xs font-extrabold border-2 border-black">8 Speakers • TBA</div>
+            </div>
+          </div>
+
+          {/* Horizontal Carousel - Cool distinct layout */}
+          <div className="relative mt-8">
+            {/* scroll buttons - desktop */}
+            <button onClick={() => scrollCarousel('left')} className="hidden md:flex absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white border-2 border-black rounded-full items-center justify-center shadow-[3px_3px_0_0_#000] hover:bg-black hover:text-white transition">
+              <ChevronDown size={18} className="rotate-90" />
+            </button>
+            <button onClick={() => scrollCarousel('right')} className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white border-2 border-black rounded-full items-center justify-center shadow-[3px_3px_0_0_#000] hover:bg-black hover:text-white transition">
+              <ChevronDown size={18} className="-rotate-90" />
+            </button>
+
+            <div
+              ref={carouselRef}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 scroll-smooth"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {speakers.map((s, idx) => (
+                <motion.div
+                  key={s.name}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.07 }}
+                  whileHover={{ y: -6, rotate: idx % 2 === 0 ? -0.6 : 0.6 }}
+                  className={`${s.featured ? 'min-w-[320px] md:min-w-[380px]' : 'min-w-[300px] md:min-w-[320px]'} snap-center shrink-0 group bg-white border-[2.5px] border-black rounded-[22px] overflow-hidden shadow-[5px_5px_0_0_#000] hover:shadow-[7px_7px_0_0_#000] transition-all cursor-pointer flex flex-col`}
+                >
+                  <div className={`relative ${s.featured ? 'h-[176px]' : 'h-[160px]'} ${s.color} p-4 flex flex-col justify-between overflow-hidden`}>
+                    <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: `radial-gradient(#000 1.5px, transparent 1.5px)`, backgroundSize: '14px 14px' }} />
+                    <div className="absolute -right-1 -top-1 text-[68px] font-extrabold text-white/15 leading-none select-none" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{s.name.split(' ').map(n=>n[0]).join('')}</div>
+
+                    <div className="relative flex justify-between items-start">
+                      <span className="bg-white border-2 border-black rounded-full px-2.5 py-1 text-[10px] font-extrabold tracking-widest shadow-[2px_2px_0_0_#000]">{s.track}</span>
+                      <span className="bg-black text-white rounded-full px-2.5 py-1 text-[10px] font-bold">0{idx + 1}</span>
+                    </div>
+
+                    <div className="relative flex items-center gap-3">
+                      <div className="w-[64px] h-[64px] md:w-[72px] md:h-[72px] rounded-full bg-white border-[2.5px] border-black flex items-center justify-center text-lg md:text-xl font-extrabold shadow-[3px_3px_0_0_#000] group-hover:scale-[1.05] transition shrink-0">
+                        {s.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="bg-white border border-black rounded-full px-2 py-0.5 text-[10px] font-bold inline-block truncate max-w-[150px]">{s.company}</div>
+                        <div className="mt-1.5 bg-black text-white rounded-full px-2.5 py-1 text-xs font-bold inline-block max-w-full truncate">{s.talk}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 flex-1 flex flex-col bg-white">
+                    <div className="font-extrabold text-[17px] leading-tight tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{s.name}</div>
+                    <div className="text-xs font-bold text-black/55 mt-0.5">{s.role}</div>
+                    <div className="mt-3 flex items-center gap-2">
+                      <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-[#FFFBF0] border-2 border-black">View Talk →</span>
+                      <span className={`ml-auto w-8 h-8 rounded-full ${s.color} border-2 border-black flex items-center justify-center group-hover:rotate-12 group-hover:scale-110 transition`}><ArrowRight size={13} strokeWidth={2.5} /></span>
+                    </div>
+                  </div>
+
+                  {/* bottom color strip */}
+                  <div className="h-[6px] w-full flex">
+                    <div className="flex-1 bg-gdgBlue" /><div className="flex-1 bg-gdgRed" /><div className="flex-1 bg-gdgYellow" /><div className="flex-1 bg-gdgGreen" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-2 flex justify-center gap-1.5 md:hidden">
+              <span className="text-xs font-bold text-black/40">← Swipe to explore →</span>
+            </div>
+            <div className="hidden md:flex justify-center gap-1.5 mt-3">
+              <span className="w-6 h-1.5 bg-black rounded-full" /><span className="w-1.5 h-1.5 bg-black/20 rounded-full" /><span className="w-1.5 h-1.5 bg-black/20 rounded-full" />
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-3 bg-white border-2 border-black rounded-full px-4 py-3 shadow-[3px_3px_0_0_#000]">
+            <span className="text-xs font-bold text-black/60">* Final lineup TBA — curated with GDG & community. Want to speak?</span>
+            <a href="mailto:gdg.ranchi@gmail.com" className="px-5 py-2 rounded-full bg-black text-white text-xs font-extrabold border border-black hover:bg-white hover:text-black transition">Apply as Speaker →</a>
+          </div>
+        </div>
+      </section>
+
+      {/* Agenda - Normal Ranchi DevFest Theme */}
+      <section id="agenda" className="relative overflow-hidden bg-white border-y-[3px] border-black">
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(to right, #0D2818 1px, transparent 1px), linear-gradient(to bottom, #0D2818 1px, transparent 1px)`, backgroundSize: '36px 36px' }} />
+        <div className="absolute top-0 left-0 w-full h-[6px] flex">
+          <div className="flex-1 bg-gdgBlue" /><div className="flex-1 bg-gdgRed" /><div className="flex-1 bg-gdgYellow" /><div className="flex-1 bg-gdgGreen" />
+        </div>
+        <div className="absolute -top-16 -right-20 w-[380px] h-[380px] bg-gdgBlue/6 rounded-full blur-[60px]" />
+        <div className="absolute -bottom-16 -left-20 w-[380px] h-[380px] bg-gdgYellow/8 rounded-full blur-[60px]" />
+
+        <div className="relative max-w-[1280px] mx-auto px-4 md:px-6 py-10 md:py-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-[#FFFBF0] border-2 border-black rounded-full px-3 py-1 text-xs font-extrabold shadow-[2px_2px_0_0_#000]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <span className="w-2 h-2 bg-gdgGreen rounded-full animate-pulse" /> FULL DAY • ONE STAGE • MANY TRACKS
+              </div>
+              <h2 className="mt-3 text-[32px] md:text-[46px] font-extrabold tracking-[-0.04em] leading-none" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800 }}>
+                Agenda <span className="inline-block bg-black text-white border-2 border-black rounded-full px-3 py-1 text-[13px] md:text-[15px] rotate-1 ml-1">09 AM — 05:30 PM</span>
+              </h2>
+              <p className="mt-2 text-sm font-semibold text-black/60 max-w-[520px]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                A power-packed day of learning, building, and networking — <span className="text-black font-extrabold">Sohrai soul, Sal-forest calm</span> and Ranchi's waterfall energy.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="bg-white border-2 border-black rounded-full px-3 py-1.5 text-xs font-extrabold shadow-[2px_2px_0_0_#000] hidden md:inline-flex">6 Sessions</span>
+              <span className="bg-black text-white rounded-full px-3 py-1.5 text-xs font-extrabold">09 AM — 05:30 PM</span>
+            </div>
+          </div>
+
+          {/* grid - all visible without scroll */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {agenda.map((a, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06 }}
+                whileHover={{ y: -4, rotate: i % 2 === 0 ? -0.6 : 0.6 }}
+                className="group"
+              >
+                <div className="flex justify-center -mb-3 relative z-10">
+                  <div className={`w-10 h-10 rounded-full ${i === 0 ? 'bg-gdgBlue' : i === 1 ? 'bg-gdgRed' : i === 2 ? 'bg-gdgYellow text-black' : i === 3 ? 'bg-gdgGreen' : i === 4 ? 'bg-ranchiGreen' : 'bg-gdgBlue'} border-[2.5px] border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] text-white font-extrabold text-sm`}>
+                    {i + 1}
+                  </div>
+                </div>
+                <div className="bg-white border-[2.5px] border-black rounded-[18px] overflow-hidden shadow-[4px_4px_0_0_#000] group-hover:shadow-[6px_6px_0_0_#000] transition-all">
+                  <div className="h-[5px] w-full flex">
+                    <div className="flex-1 bg-gdgBlue" /><div className="flex-1 bg-gdgRed" /><div className="flex-1 bg-gdgYellow" /><div className="flex-1 bg-gdgGreen" />
+                  </div>
+                  <div className="bg-[#FFFBF0] border-b-2 border-black px-3 py-2 flex items-center justify-between">
+                    <span className="text-xs font-extrabold tracking-widest bg-black text-white rounded-full px-2.5 py-1">{a.time}</span>
+                    <span className="text-[10px] font-extrabold px-2 py-1 rounded-full bg-white border border-black">{i < 2 ? 'Main Stage' : i < 4 ? 'Track' : 'Workshop'}</span>
+                  </div>
+                  <div className="p-4">
+                    <div className="font-extrabold text-[15px] leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{a.title}</div>
+                    <div className="text-xs font-semibold text-black/60 mt-1.5 leading-relaxed min-h-[36px]">{a.desc}</div>
+                    <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-[#FFFBF0] border border-black">
+                      <Clock size={12} /> {i === 0 ? 'Welcome' : i === 5 ? 'Closing' : 'Session'}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             ))}
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <span className="inline-flex items-center gap-2 bg-gdgYellow border-2 border-black rounded-full px-4 py-2 text-xs font-extrabold shadow-[2px_2px_0_0_#000]">
+              <Sparkles size={14} /> More sessions to be announced • Stay tuned @GDGRanchi
+            </span>
           </div>
         </div>
       </section>
@@ -422,32 +595,80 @@ export default function App() {
         </div>
       </section>
 
-      {/* Team */}
-      <section id="team" className="max-w-[1280px] mx-auto px-4 md:px-6 py-10">
-        <div className="text-center">
-          <div className="text-xs font-black tracking-widest text-gdgGreen">THE HUMANS BEHIND THE MAGIC</div>
-          <h2 className="display font-black text-[36px] md:text-[44px] tracking-tighter">Our Team</h2>
-          <p className="text-sm text-black/60 max-w-[600px] mx-auto">Meet the people who make DevFest possible — students and professionals working together across teams.</p>
-        </div>
+      {/* Team - Premium Bento */}
+      <section id="team" className="relative overflow-hidden bg-[#FFFBF0] border-y-[3px] border-black">
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(to right, #0D2818 1px, transparent 1px), linear-gradient(to bottom, #0D2818 1px, transparent 1px)`, backgroundSize: '36px 36px' }} />
+        <div className="absolute -top-20 left-0 w-[380px] h-[380px] bg-gdgBlue/8 rounded-full blur-[60px]" />
+        <div className="absolute -bottom-20 right-0 w-[380px] h-[380px] bg-gdgGreen/10 rounded-full blur-[60px]" />
 
-        <div className="mt-8">
-          {["Overall Lead", "Team Leads", "Technical Team"].map(group => (
-            <div key={group} className="mb-8">
-              <h3 className="font-black text-sm tracking-widest text-black/50 mb-3">{group.toUpperCase()}</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {team.filter(m => m.group === group).map(m => (
-                  <div key={m.name} className="bg-white border-2 border-black rounded-2xl p-4 text-center shadow-[3px_3px_0_0_#000]">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gdgBlue to-gdgGreen mx-auto border-2 border-black flex items-center justify-center text-white font-black">{m.name[0]}</div>
-                    <div className="font-bold text-sm mt-3">{m.name}</div>
-                    <div className="text-xs text-black/60">{m.role}</div>
-                  </div>
-                ))}
-                {group === "Overall Lead" && <div className="bg-gdgYellow border-2 border-black rounded-2xl p-4 flex flex-col items-center justify-center border-dashed">
-                  <div className="font-black text-sm">Join Us!</div><div className="text-xs text-center">Volunteer for DevFest Ranchi 2026</div><a href="mailto:gdg.ranchi@gmail.com" className="mt-2 bg-black text-white rounded-full px-3 py-1 text-xs font-bold">Apply</a>
-                </div>}
+        <div className="relative max-w-[1280px] mx-auto px-4 md:px-6 py-12 md:py-14">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white border-2 border-black rounded-full px-3 py-1 text-xs font-extrabold shadow-[2px_2px_0_0_#000]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <span className="w-2 h-2 bg-gdgGreen rounded-full animate-pulse" /> THE HUMANS BEHIND THE MAGIC
               </div>
+              <h2 className="mt-3 text-[34px] md:text-[48px] font-extrabold tracking-[-0.04em] leading-none" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800 }}>
+                Our <span className="inline-block bg-gdgGreen text-white border-[2.5px] border-black rounded-full px-4 py-1 -rotate-1 shadow-[4px_4px_0_0_#000]">Team</span>
+              </h2>
+              <p className="mt-3 text-sm font-semibold text-black/60 max-w-[560px]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                Students + professionals building DevFest Ranchi together — <span className="font-extrabold text-black">one community, many teams.</span>
+              </p>
             </div>
-          ))}
+            <div className="bg-black text-white rounded-full px-4 py-2 text-xs font-extrabold border-2 border-black hidden md:block">8 Members • 3 Squads</div>
+          </div>
+
+          {/* Tadakta-Fadakta with Images */}
+          <div className="mt-8 grid md:grid-cols-3 gap-4">
+            {team.filter(m => m.group === "Overall Lead").map((m, i) => (
+              <motion.div key={m.name} initial={{ opacity: 0, y: 14, rotate: i === 0 ? -1 : 1 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -6, rotate: i === 0 ? -1.5 : 1.5, scale: 1.02 }} className="group relative bg-white border-[3px] border-black rounded-[22px] overflow-hidden shadow-[6px_6px_0_0_#000] hover:shadow-[8px_8px_0_0_#000] transition-all">
+                <div className={`h-28 ${i === 0 ? 'bg-gdgBlue' : 'bg-gdgRed'} relative overflow-hidden`}>
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(white 1.5px, transparent 1.5px)`, backgroundSize: '12px 12px' }} />
+                  <div className="absolute -right-6 -top-6 w-20 h-20 bg-white/20 rounded-full blur-[12px]" />
+                </div>
+                <div className="px-5 pb-5">
+                  <div className="-mt-10 relative flex justify-center">
+                    <img src={`https://i.pravatar.cc/200?img=${11 + i}`} alt={m.name} className="w-20 h-20 rounded-full border-[3px] border-black object-cover shadow-[3px_3px_0_0_#000] group-hover:scale-105 group-hover:rotate-2 transition" />
+                    <span className="absolute -bottom-1 right-1/2 translate-x-8 bg-gdgYellow border-2 border-black rounded-full px-2 py-0.5 text-[10px] font-extrabold">LEAD</span>
+                  </div>
+                  <div className="text-center mt-3">
+                    <div className="font-extrabold text-[17px]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{m.name}</div>
+                    <div className="text-xs font-bold text-white bg-black rounded-full px-3 py-1 inline-block mt-1">{m.role}</div>
+                    <div className="flex justify-center gap-1.5 mt-2">
+                      <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center"><Link2 size={10} /></span><span className="w-6 h-6 rounded-full bg-gdgBlue text-white flex items-center justify-center"><Globe size={10} /></span>
+                    </div>
+                  </div>
+                </div>
+                <div className="h-1.5 flex"><div className="flex-1 bg-gdgBlue" /><div className="flex-1 bg-gdgRed" /><div className="flex-1 bg-gdgYellow" /><div className="flex-1 bg-gdgGreen" /></div>
+              </motion.div>
+            ))}
+            <motion.div whileHover={{ y: -4, rotate: 1 }} className="bg-gdgYellow border-[3px] border-black rounded-[22px] p-6 shadow-[6px_6px_0_0_#000] flex flex-col justify-center text-center border-dashed relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-16 h-16 bg-white/40 rounded-full" />
+              <div className="text-3xl">✨</div>
+              <div className="font-extrabold text-[18px] mt-2">Join Us!</div>
+              <div className="text-xs font-bold text-black/70 mt-1">Volunteer for DevFest Ranchi 2026 — be the tadka!</div>
+              <a href="mailto:gdg.ranchi@gmail.com" className="mt-3 mx-auto bg-black text-white rounded-full px-5 py-2 text-xs font-extrabold flex items-center gap-1">Apply Now <ArrowRight size={12} /></a>
+            </motion.div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {team.filter(m => m.group !== "Overall Lead").map((m, idx) => {
+              const imgId = 20 + idx
+              const bg = idx % 4 === 0 ? 'bg-gdgBlue' : idx % 4 === 1 ? 'bg-gdgRed' : idx % 4 === 2 ? 'bg-gdgYellow' : 'bg-gdgGreen'
+              return (
+                <motion.div key={m.name} initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.05 }} whileHover={{ y: -5, rotate: idx % 2 === 0 ? -1 : 1 }} className="group bg-white border-[2.5px] border-black rounded-[20px] overflow-hidden shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] transition-all">
+                  <div className={`h-20 ${bg} relative overflow-hidden flex items-end justify-center`}>
+                    <div className="absolute inset-0 opacity-15" style={{ backgroundImage: `linear-gradient(45deg, transparent 50%, white 50%)`, backgroundSize: '10px 10px' }} />
+                    <img src={`https://i.pravatar.cc/200?img=${imgId}`} alt={m.name} className="w-16 h-16 rounded-full border-[2.5px] border-black object-cover -mb-6 shadow-[2px_2px_0_0_#000] group-hover:scale-110 group-hover:-rotate-2 transition" />
+                  </div>
+                  <div className="pt-8 p-3 text-center">
+                    <div className="font-extrabold text-sm leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{m.name}</div>
+                    <div className="text-[11px] font-extrabold text-black/60 mt-1 bg-[#FFFBF0] border border-black rounded-full px-2 py-0.5 inline-block">{m.role}</div>
+                    <div className="text-[10px] font-bold text-white bg-black rounded-full px-2 py-1 inline-block mt-2">{m.group}</div>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
         </div>
       </section>
 
