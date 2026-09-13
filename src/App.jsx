@@ -89,6 +89,51 @@ export default function App() {
               </motion.div>
             </div>
 
+            {/* GDG / Google Developer PNGs floating - developer elements */}
+            <motion.img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/48px-Google_%22G%22_logo.svg.png"
+              alt="Google"
+              className="absolute top-[18%] left-[12%] w-12 h-12 md:w-14 md:h-14 object-contain bg-white border-2 border-black rounded-xl p-1.5 shadow-[3px_3px_0_0_#000] hidden md:block"
+              animate={{ y: [0, -10, 0], rotate: [0, 3, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/200px-Android_robot.svg.png"
+              alt="Android"
+              className="absolute top-[20%] right-[14%] w-11 h-11 md:w-12 md:h-12 object-contain bg-white border-2 border-black rounded-xl p-1 shadow-[3px_3px_0_0_#000] hidden md:block"
+              animate={{ y: [0, 10, 0], rotate: [0, -3, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+            />
+            <motion.img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Google-flutter-logo.png/240px-Google-flutter-logo.png"
+              alt="Flutter"
+              className="absolute bottom-[22%] left-[10%] w-12 h-12 md:w-14 md:h-8 object-contain bg-white border-2 border-black rounded-xl p-1.5 shadow-[3px_3px_0_0_#000] hidden md:block"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+            />
+            <motion.img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Firebase_Logo.svg/200px-Firebase_Logo.svg.png"
+              alt="Firebase"
+              className="absolute bottom-[20%] right-[12%] w-11 h-11 md:w-12 md:h-12 object-contain bg-white border-2 border-black rounded-xl p-1 shadow-[3px_3px_0_0_#000] hidden md:block"
+              animate={{ y: [0, 9, 0] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            />
+            <motion.img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Google_Cloud_logo.svg/256px-Google_Cloud_logo.svg.png"
+              alt="Google Cloud"
+              className="absolute top-[48%] left-[6%] w-10 h-10 md:w-11 md:h-11 object-contain bg-white border-2 border-black rounded-lg p-1 shadow-[2px_2px_0_0_#000] hidden lg:block"
+              animate={{ y: [0, -6, 0], rotate: [0, 2, 0] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+            />
+            <motion.img
+              src="https://cdn.worldvectorlogo.com/logos/google-developers-1.svg"
+              alt="GDG"
+              onError={(e) => { e.currentTarget.style.display = 'none' }}
+              className="absolute top-[46%] right-[7%] w-10 h-10 md:w-12 md:h-12 object-contain bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] hidden lg:block"
+              animate={{ y: [0, 7, 0] }}
+              transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+            />
+
             {/* center content */}
             <div className="relative text-center px-6">
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="inline-flex items-center gap-2 bg-white border-2 border-black rounded-full px-4 py-1.5 text-xs font-extrabold shadow-[2px_2px_0_0_#000]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
