@@ -6,14 +6,14 @@ import { Menu, X, Calendar, MapPin, Users, Mic2, Clock, Award, Ticket, ChevronDo
 const stats = ["10+ Speakers", "800+ Participants", "10+ Sessions", "2+ Workshops", "Networking", "Swag & Goodies"]
 
 const speakers = [
-  { name: "Pankaj Rai", role: "GDG Android & Firebase", company: "Google Developer Expert", color: "bg-gdgBlue" },
-  { name: "Aprajita Verma", role: "Frontend Architect", company: "@MYCOM", color: "bg-gdgRed" },
-  { name: "Vivek Yadav", role: "Enterprise Solutions Architect", company: "@FlutterFlow", color: "bg-gdgYellow" },
-  { name: "Om Prakash", role: "Founder & CEO", company: "AppyCrown", color: "bg-gdgGreen" },
-  { name: "Rajesh Ranjan", role: "Deep Tech Angel Investor", company: "Investor", color: "bg-gdgBlue" },
-  { name: "Chandan Tiwari", role: "Serial Entrepreneur", company: "Founder", color: "bg-gdgRed" },
-  { name: "Kumar Saurabh", role: "Startup Evangelist", company: "Community Lead", color: "bg-gdgGreen" },
-  { name: "Aarohi Singh", role: "AI/ML Engineer", company: "GDG Ranchi", color: "bg-gdgYellow" },
+  { name: "Pankaj Rai", role: "GDE Android & Firebase", company: "Google Developer Expert", color: "bg-gdgBlue", track: "Android", talk: "Modern Android with Gemini", featured: true },
+  { name: "Aprajita Verma", role: "Frontend Architect", company: "@MYCOM", color: "bg-gdgRed", track: "Web", talk: "Design Systems at Scale", featured: true },
+  { name: "Vivek Yadav", role: "Enterprise Solutions Architect", company: "@FlutterFlow", color: "bg-gdgYellow", track: "Flutter", talk: "FlutterFlow in Production", featured: false },
+  { name: "Om Prakash", role: "Founder & CEO", company: "AppyCrown", color: "bg-gdgGreen", track: "Startup", talk: "Building for Bharat", featured: false },
+  { name: "Rajesh Ranjan", role: "Deep Tech Angel Investor", company: "Investor", color: "bg-gdgBlue", track: "AI", talk: "Investing in Deep Tech", featured: false },
+  { name: "Chandan Tiwari", role: "Serial Entrepreneur", company: "Founder", color: "bg-gdgRed", track: "Product", talk: "Zero to One, Again", featured: false },
+  { name: "Kumar Saurabh", role: "Startup Evangelist", company: "Community Lead", color: "bg-gdgGreen", track: "Community", talk: "Community Led Growth", featured: false },
+  { name: "Aarohi Singh", role: "AI/ML Engineer", company: "GDG Ranchi", color: "bg-gdgYellow", track: "GenAI", talk: "GenAI for Developers", featured: false },
 ]
 
 const team = [
